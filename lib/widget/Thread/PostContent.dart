@@ -297,7 +297,12 @@ class PostContent extends StatelessWidget {
         },
       );
     } else {
-      return BBcodeRenderer(bbcode: content, parentContext: context, postDetails: postDetails,);
+      try {
+        Widget rendered = BBcodeRenderer(bbcode: content, parentContext: context, postDetails: postDetails,);
+        return rendered;
+      } catch(e) {
+        return Text('Error in parsing bbcode');
+      }
     }
   }
 }

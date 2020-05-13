@@ -14,7 +14,7 @@ class ImgurHelper {
     // Binary data
     String fileAsBase64 = base64Encode(file.readAsBytesSync());
 
-    FormData formData = new FormData.from({
+    FormData formData = new FormData.fromMap({
       "image": fileAsBase64,
     });
 

@@ -52,7 +52,7 @@ class KnockoutAPI {
 
     Dio dio = new Dio();
     dio.options.baseUrl = mBaseurl;
-    dio.options.contentType = ContentType.json;
+    dio.options.contentType = ContentType.json.toString();
     dio.options.headers = mHeaders;
     dio.options.receiveDataWhenStatusError = true;
 

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:chewie_custom/chewie.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import 'package:path/path.dart';
@@ -39,7 +39,7 @@ class _VideoElementState extends State<VideoElement> {
                 videoPlayerController: vidController,
                 aspectRatio: size.width / size.height,
                 autoInitialize: false,
-                deviceOrientationsDuringFullScreen: [
+                deviceOrientationsAfterFullScreen: [
                   DeviceOrientation.landscapeLeft,
                   DeviceOrientation.landscapeRight,
                   DeviceOrientation.portraitDown,
@@ -57,13 +57,13 @@ class _VideoElementState extends State<VideoElement> {
     chewieController = ChewieController(
         videoPlayerController: vidController,
         aspectRatio: size.width / size.height,
-        autoInitialize: false,
-        deviceOrientationsDuringFullScreen: [
+        deviceOrientationsAfterFullScreen: [
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
           DeviceOrientation.portraitDown,
           DeviceOrientation.portraitUp
         ],
+        autoInitialize: false,
         looping: true,
         autoPlay: false);
     chewieController.addListener(chewieListener);
