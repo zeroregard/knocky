@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:knocky/helpers/api.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:knocky/models/syncData.dart';
+import 'package:knocky/screens/threadGallary.dart';
 import 'package:knocky/state/appState.dart';
 import 'package:knocky/state/subscriptions.dart';
 import 'package:knocky/models/thread.dart';
@@ -550,6 +551,20 @@ class _ThreadScreenState extends State<ThreadScreen>
             icon: Icon(Icons.refresh),
             tooltip: 'Refresh',
             onPressed: () => refreshPage(),
+          ),
+          IconButton(
+            icon: Icon(Icons.image),
+            tooltip: 'Gallery mode',
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ThreadGalleryScreen(
+                    thread: details,
+                  ),
+                ),
+              )
+            },
           ),
           Builder(
             builder: (BuildContext bcontext) {
