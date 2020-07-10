@@ -6,6 +6,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:knocky/helpers/Download.dart';
 import 'package:knocky/helpers/bbcodeparser.dart' as bbcodeparser;
 import 'package:knocky/models/thread.dart';
+import 'package:knocky/widget/Thread/PostElements/Twitter.dart';
+import 'package:knocky/widget/Thread/PostElements/Video.dart';
+import 'package:knocky/widget/Thread/PostElements/YouTubeEmbed.dart';
 
 class ThreadGalleryScreen extends StatefulWidget {
   Thread thread;
@@ -19,6 +22,7 @@ class ThreadGalleryScreen extends StatefulWidget {
 class _ThreadGalleryScreenState extends State<ThreadGalleryScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<String> urls = new List();
+  List<bbob.Element> elements = new List();
   int _currentPage = 0;
   bool _isZooming = false;
 
@@ -34,10 +38,20 @@ class _ThreadGalleryScreenState extends State<ThreadGalleryScreen> {
       nodes.forEach((node) {
         if (node.runtimeType == bbob.Element) {
           var element = node as bbob.Element;
-          if (element.tag == 'img') {
+
+          switch (element.tag) {
+            case 'img':
+            case 'twitter':
+            case 'video':
+            case 'youtube':
+              this.elements.add(element);
+              break;
+          }
+
+          /*if (element.tag == 'img') {
             print(element.textContent);
             this.urls.add(element.textContent);
-          }
+          }*/
         }
       });
     });
@@ -82,38 +96,85 @@ class _ThreadGalleryScreenState extends State<ThreadGalleryScreen> {
             _currentPage = newIndex;
           });
         },
-        itemCount: this.urls.length,
+        itemCount: this.elements.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: ZoomableWidget(
-              minScale: 1.0,
-              maxScale: 2.0,
-              zoomSteps: 3,
-              enableFling: true,
-              autoCenter: true,
-              multiFingersPan: false,
-              bounceBackBoundary: true,
-              onZoomChanged: (double zoom) {
-                if (zoom > 1.0 && !_isZooming) {
-                  setState(() {
-                    _isZooming = true;
-                  });
-                }
+          bbob.Element element = this.elements[index];
+          print(element);
 
-                if (zoom == 1.0 && _isZooming) {
-                  setState(() {
-                    _isZooming = false;
-                  });
-                }
-              },
-              // default factor is 1.0, use 0.0 to disable boundary
-              panLimit: 1.0,
-              child: CachedNetworkImage(
-                placeholder: (context, url) => CircularProgressIndicator(),
-                imageUrl: this.urls[index],
-              ),
-            ),
-          );
+          switch (element.tag) {
+            case 'img':
+              return Container(
+                child: ZoomableWidget(
+                  minScale: 1.0,
+                  maxScale: 2.0,
+                  zoomSteps: 3,
+                  enableFling: true,
+                  autoCenter: true,
+                  multiFingersPan: false,
+                  bounceBackBoundary: true,
+                  onZoomChanged: (double zoom) {
+                    if (zoom > 1.0 && !_isZooming) {
+                      setState(() {
+                        _isZooming = true;
+                      });
+                    }
+
+                    if (zoom == 1.0 && _isZooming) {
+                      setState(() {
+                        _isZooming = false;
+                      });
+                    }
+                  },
+                  // default factor is 1.0, use 0.0 to disable boundary
+                  panLimit: 1.0,
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    imageUrl: element.textContent,
+                  ),
+                ),
+              );
+            case 'twitter':
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: TwitterEmbedWidget(
+                      onTapImage: (List<String> allPhotos, int photoIndex,
+                              String hashcode) =>
+                          {},
+                      twitterUrl: element.textContent,
+                    ),
+                  )
+                ],
+              );
+            case 'youtube':
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: YoutubeVideoEmbed(
+                      url: element.textContent,
+                    ),
+                  )
+                ],
+              );
+            case 'video':
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: VideoElement(
+                      url: element.textContent,
+                    ),
+                  )
+                ],
+              );
+            default:
+              return Text('Not supported element');
+          }
         },
       ),
     );
