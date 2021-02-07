@@ -3,6 +3,7 @@ import 'package:knocky_edge/models/subforumDetails.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:knocky_edge/helpers/icons.dart';
 import 'package:knocky_edge/screens/thread.dart';
+import 'package:knocky_edge/screens/threadPageView.dart';
 import 'package:knocky_edge/widget/InkWellOnWidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:knocky_edge/helpers/colors.dart';
@@ -21,7 +22,7 @@ class SubforumDetailListItem extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ThreadScreen(
+        builder: (context) => ThreadPageViewScreen(
           title: item.title,
           postCount: item.postCount,
           threadId: item.id,
@@ -38,7 +39,7 @@ class SubforumDetailListItem extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ThreadScreen(
+        builder: (context) => ThreadPageViewScreen(
           title: threadDetails.title,
           postCount: threadDetails.postCount,
           threadId: threadDetails.id,
@@ -63,7 +64,7 @@ class SubforumDetailListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ThreadScreen(
+            builder: (context) => ThreadPageViewScreen(
               title: threadDetails.title,
               postCount: threadDetails.postCount,
               threadId: threadDetails.id,

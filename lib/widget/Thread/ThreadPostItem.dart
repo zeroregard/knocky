@@ -19,19 +19,20 @@ class ThreadPostItem extends StatefulWidget {
   final bool isOnReplyList;
   final Function onTapEditPost;
   final Thread thread;
+  final bool useScroll;
   final int currentPage;
 
-  ThreadPostItem({
-    this.postDetails,
-    this.scaffoldKey,
-    this.onPostRated,
-    this.onPressReply,
-    this.isOnReplyList = false,
-    this.onLongPressReply,
-    this.onTapEditPost,
-    this.thread,
-    this.currentPage,
-  });
+  ThreadPostItem(
+      {this.postDetails,
+      this.scaffoldKey,
+      this.onPostRated,
+      this.onPressReply,
+      this.isOnReplyList = false,
+      this.onLongPressReply,
+      this.onTapEditPost,
+      this.thread,
+      this.currentPage,
+      this.useScroll = false});
 
   @override
   _ThreadPostItemState createState() => _ThreadPostItemState();
@@ -201,7 +202,7 @@ class _ThreadPostItemState extends State<ThreadPostItem> {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(bottom: 5.0, top: 10.0),
+      margin: EdgeInsets.only(bottom: 64.0, top: 10.0),
       child: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -232,38 +233,46 @@ class _ThreadPostItemState extends State<ThreadPostItem> {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: PostContent(
-                  postDetails: widget.postDetails,
-                  textSelectable: this.textSelectable,
-                  content: widget.postDetails.content,
-                  onTapSpoiler: (text) {
-                    onPressSpoiler(context, text);
-                  },
-                  scaffoldKey: this.widget.scaffoldKey),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: SingleChildScrollView(
+                  child: PostContent(
+                      postDetails: widget.postDetails,
+                      textSelectable: this.textSelectable,
+                      content: widget.postDetails.content,
+                      onTapSpoiler: (text) {
+                        onPressSpoiler(context, text);
+                      },
+                      scaffoldKey: this.widget.scaffoldKey),
+                ),
+              ),
             ),
             Container(
-                padding:
-                    EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    if (widget.postDetails.bans != null)
-                      Column(
-                        children: widget.postDetails.bans
-                            .map(
-                              (ban) => PostBan(
-                                ban: ban,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: footer),
-                  ],
-                )),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromRGBO(45, 45, 48, 1)
+                  : Color.fromRGBO(230, 230, 230, 1),
+              padding:
+                  EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if (widget.postDetails.bans != null)
+                    Column(
+                      children: widget.postDetails.bans
+                          .map(
+                            (ban) => PostBan(
+                              ban: ban,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: footer),
+                ],
+              ),
+            ),
           ],
         ),
       ),
